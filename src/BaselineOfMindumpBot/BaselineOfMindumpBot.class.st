@@ -13,10 +13,10 @@ BaselineOfMindumpBot >> baseline: spec [
 		self
 			telebots: spec;
 			openAiPapi: spec.
-		spec package: 'MindumpBot' with: [
-			spec requires:
-				#( 'Telebots-Core' 'Mustache-Library' 'OpenAI-Speech'
-				   'OpenAI-API' ) ] ]
+		spec
+			package: 'MindumpBot'
+			with: [
+			spec requires: #( 'Telebots-Core' 'OpenAI-Speech' 'OpenAI-API' ) ] ]
 ]
 
 { #category : 'baselines' }

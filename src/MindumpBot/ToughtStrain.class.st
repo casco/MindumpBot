@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'accessing' }
-ToughtStrain >> add: aTought [
+ToughtStrain >> addTought: aTought [
 	toughts add: aTought 
 ]
 

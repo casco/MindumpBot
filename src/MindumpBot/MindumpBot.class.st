@@ -10,6 +10,14 @@ Class {
 }
 
 { #category : 'actions' }
+MindumpBot >> brainFor: aMessage [
+
+	^ brains
+		  detect: [ :each | each telegramUser = aMessage from ]
+		  ifNone: [ brains add: (Brain telegramUser: aMessage from) ]
+]
+
+{ #category : 'actions' }
 MindumpBot >> handleDocumentMessage: aMessage [
 
 	| fileReference |
@@ -43,15 +51,13 @@ MindumpBot >> handleTextMessage: aMessage [
 { #category : 'actions' }
 MindumpBot >> handleVoiceMessage: aMessage [
 
-	| fileReference |
-	fileReference := 'temp-audio.oga' asFileReference.
-	fileReference binaryWriteStream
-		nextPutAll: (aMessage voice readStreamWith: self) contents;
-		close.
-	aMessage answer: 'Sorry, I do not speak human.'.
-	aMessage answer:
-		'However, I just saved the file as ' , fileReference fullName
-		, ' for future reference.'
+	| transcription |
+	transcription := self transcribe: aMessage.
+	(self brainFor: aMessage) addTought:
+		(Tought textContent: transcription timeStamp: DateAndTime now).
+	aMessage answer: 'I just added "'
+		, (transcription copyFrom: 1 to: (50 min: transcription size))
+		, '..." to the current tought strain.'
 ]
 
 { #category : 'initialize' }
@@ -65,4 +71,18 @@ MindumpBot >> initialize [
 MindumpBot >> start: aMessage [
 
 	self sendChatMessage: 'Hi! let''s *start*' to: aMessage chat
+]
+
+{ #category : 'transcribing' }
+MindumpBot >> transcribe: anAudioMessage [
+
+	| sapi bytes |
+	sapi := SpeechToTextApi new.
+	sapi isProperlyConfigured ifFalse: [
+		anAudioMessage answer:
+			'Al parecer, la API de transcripción no está correctamente configurada.'.
+		^ nil ].
+
+	bytes := (anAudioMessage voice readStreamWith: self) contents.
+	^ sapi transcribeByteArray: bytes
 ]

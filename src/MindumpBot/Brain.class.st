@@ -3,7 +3,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'toughtStrains',
-		'telegramUser'
+		'telegramUser',
+		'activeToughtStrain'
 	],
 	#category : 'MindumpBot-Model',
 	#package : 'MindumpBot',
@@ -18,8 +19,23 @@ Brain class >> telegramUser: aTelegramUser [
 		  yourself
 ]
 
+{ #category : 'accessing' }
+Brain >> activeToughtStrain [
+
+	^ activeToughtStrain ifNil: [
+		  toughtStrains
+			  ifEmpty: [ toughtStrains add: ToughtStrain new ]
+			  ifNotEmpty: [ toughtStrains first ] ]
+]
+
 { #category : 'initialize' }
-Brain >> add: aToughtStrain [
+Brain >> addTought: aTought [
+
+	self activeToughtStrain addTought: aTought
+]
+
+{ #category : 'initialize' }
+Brain >> addToughtStrain: aToughtStrain [
 
 	toughtStrains add: aToughtStrain
 ]

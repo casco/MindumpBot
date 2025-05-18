@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'toughtStrains',
 		'telegramUser',
-		'activeToughtStrain'
+		'activeToughtStrain',
+		'oneTimeAccessCode',
+		'accessCodeValidThrough'
 	],
 	#category : 'MindumpBot-Model',
 	#package : 'MindumpBot',
@@ -17,6 +19,12 @@ Brain class >> telegramUser: aTelegramUser [
 	^ self new
 		  telegramUser: aTelegramUser;
 		  yourself
+]
+
+{ #category : 'accessing' }
+Brain >> accessCodeValidThrough [
+
+	^ accessCodeValidThrough
 ]
 
 { #category : 'accessing' }
@@ -44,6 +52,19 @@ Brain >> addToughtStrain: aToughtStrain [
 Brain >> initialize [ 
   toughtStrains := OrderedCollection new.
 
+]
+
+{ #category : 'accessing' }
+Brain >> oneTimeAccessCode [
+
+	^ oneTimeAccessCode
+]
+
+{ #category : 'accessing' }
+Brain >> oneTimeAccessCode: code accessCodeValidThrough: aDateAndTime [
+
+	oneTimeAccessCode := code.
+	accessCodeValidThrough := aDateAndTime
 ]
 
 { #category : 'accessing' }

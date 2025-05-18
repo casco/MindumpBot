@@ -4,13 +4,38 @@ Class {
 	#instVars : [
 		'brains'
 	],
+	#classInstVars : [
+		'botRegistry'
+	],
 	#category : 'MindumpBot-Bot',
 	#package : 'MindumpBot',
 	#tag : 'Bot'
 }
 
+{ #category : 'accessing' }
+MindumpBot class >> botRegistry [
+
+	^ botRegistry
+]
+
+{ #category : 'instance-creation' }
+MindumpBot class >> token: aToken [
+
+	^ (botRegistry ifNil: [ botRegistry := OrderedCollection new ])
+		detect: [ :each | each token = aToken ]
+		ifNone: [ botRegistry add: (super token: aToken) ]
+]
+
 { #category : 'actions' }
-MindumpBot >> brainFor: aMessage [
+MindumpBot >> brainForCode: aOneTimeAccessCode [
+
+	^ brains
+		  detect: [ :each | each oneTimeAccessCode = aOneTimeAccessCode ]
+		  ifNone: [ nil ]
+]
+
+{ #category : 'actions' }
+MindumpBot >> brainForMessage: aMessage [
 
 	^ brains
 		  detect: [ :each | each telegramUser = aMessage from ]
@@ -53,7 +78,7 @@ MindumpBot >> handleVoiceMessage: aMessage [
 
 	| transcription |
 	transcription := self transcribe: aMessage.
-	(self brainFor: aMessage) addTought:
+	(self brainForMessage: aMessage) addTought:
 		(Tought textContent: transcription timeStamp: DateAndTime now).
 	aMessage answer: 'I just added "'
 		, (transcription copyFrom: 1 to: (50 min: transcription size))
@@ -65,6 +90,17 @@ MindumpBot >> initialize [
 
 	super initialize.
 	brains := OrderedCollection new.
+]
+
+{ #category : 'commands' }
+MindumpBot >> login: aMessage [
+
+	| brain |
+	brain := self brainForMessage: aMessage.
+	brain
+		oneTimeAccessCode: Time millisecondClockValue greaseString
+		accessCodeValidThrough: DateAndTime now + 5 minutes.
+	aMessage answer: 'Your access code is ' , brain oneTimeAccessCode greaseString 
 ]
 
 { #category : 'commands' }

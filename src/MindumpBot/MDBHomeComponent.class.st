@@ -9,5 +9,7 @@ Class {
 { #category : 'rendering' }
 MDBHomeComponent >> renderContentOn: html [
 
-   html paragraph: 'Hi!'
+	html container: [
+		self session brain thoughtStrains do: [ :each |
+			html paragraph: [ html text: each summary ] ] ]
 ]

@@ -2,11 +2,11 @@ Class {
 	#name : 'Brain',
 	#superclass : 'Object',
 	#instVars : [
-		'toughtStrains',
 		'telegramUser',
 		'activeToughtStrain',
 		'oneTimeAccessCode',
-		'accessCodeValidThrough'
+		'accessCodeValidThrough',
+		'thoughtStrains'
 	],
 	#category : 'MindumpBot-Model',
 	#package : 'MindumpBot',
@@ -31,9 +31,9 @@ Brain >> accessCodeValidThrough [
 Brain >> activeToughtStrain [
 
 	^ activeToughtStrain ifNil: [
-		  toughtStrains
-			  ifEmpty: [ toughtStrains add: ToughtStrain new ]
-			  ifNotEmpty: [ toughtStrains first ] ]
+		  thoughtStrains
+			  ifEmpty: [ thoughtStrains add: ToughtStrain new ]
+			  ifNotEmpty: [ thoughtStrains first ] ]
 ]
 
 { #category : 'initialize' }
@@ -45,12 +45,12 @@ Brain >> addTought: aTought [
 { #category : 'initialize' }
 Brain >> addToughtStrain: aToughtStrain [
 
-	toughtStrains add: aToughtStrain
+	thoughtStrains add: aToughtStrain
 ]
 
 { #category : 'initialize' }
 Brain >> initialize [ 
-  toughtStrains := OrderedCollection new.
+  thoughtStrains := OrderedCollection new.
 
 ]
 
@@ -80,7 +80,7 @@ Brain >> telegramUser: anObject [
 ]
 
 { #category : 'accessing' }
-Brain >> toughtStrains [
+Brain >> thoughtStrains [
 
-	^ toughtStrains
+	^ thoughtStrains
 ]

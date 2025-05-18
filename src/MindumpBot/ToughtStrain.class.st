@@ -2,7 +2,8 @@ Class {
 	#name : 'ToughtStrain',
 	#superclass : 'Object',
 	#instVars : [
-		'toughts'
+		'summary',
+		'thoughts'
 	],
 	#category : 'MindumpBot-Model',
 	#package : 'MindumpBot',
@@ -11,11 +12,32 @@ Class {
 
 { #category : 'accessing' }
 ToughtStrain >> addTought: aTought [
-	toughts add: aTought 
+	thoughts add: aTought 
 ]
 
 { #category : 'initialization' }
 ToughtStrain >> initialize [ 
-  toughts := OrderedCollection new.
+  thoughts := OrderedCollection new.
 
+]
+
+{ #category : 'accessing' }
+ToughtStrain >> summary [
+
+	^ summary ifNil: [
+		  thoughts
+			  ifEmpty: [ 'An empty thought strain' ]
+			  ifNotEmpty: [ thoughts first textContent ] ]
+]
+
+{ #category : 'accessing' }
+ToughtStrain >> summary: anObject [
+
+	summary := anObject
+]
+
+{ #category : 'accessing' }
+ToughtStrain >> thoughts [
+
+	^ thoughts
 ]
